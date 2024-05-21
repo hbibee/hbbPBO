@@ -1,5 +1,8 @@
 package data;
 import books.Book;
+
+import java.util.ArrayList;
+
 public abstract class User {
     private String nim;
 
@@ -11,13 +14,13 @@ public abstract class User {
         return nim;
     }
 
-    public void displayBooks(Book[] bookList){
+    public void displayBooks(ArrayList<Book> bookArrayList){
 
     }
     public void addStudent(){
 
     }
-    public void choiceBook(Book[] bookList){
+    public void choiceBook(ArrayList<Book> bookArrayList){
 
     }
 

@@ -39,32 +39,36 @@ public class Student extends User implements iMenu {
 
     public void menu() {
         Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("Menu Mahasiswa");
-            System.out.println("1. Buku Terpinjam");
-            System.out.println("2. Pinjam Buku");
-            System.out.println("3. Kembalikan Buku");
-            System.out.println("4. Pinjam Buku atau Logout");
-            System.out.print("Pilih antara (1-4): ");
-            int pilih = scanner.nextInt();
+        try {
+            while (true) {
+                System.out.println("Menu Mahasiswa");
+                System.out.println("1. Buku Terpinjam");
+                System.out.println("2. Pinjam Buku");
+                System.out.println("3. Kembalikan Buku");
+                System.out.println("4. Pinjam Buku atau Logout");
+                System.out.print("Pilih antara (1-4): ");
+                int pilih = scanner.nextInt();
 
-            switch (pilih) {
-                case 1:
-                    System.out.println("Buku terpinjam: ");
-                    displayBorrowedBooks();
-                    break;
-                case 2:
-                    choiceBook(daftarBuku);
-                    break;
-                case 3:
-                    returnBook();
-                    break;
-                case 4:
-                    logout();
-                    return;
-                default:
-                    System.out.println("Pilihan tidak valid!");
+                switch (pilih) {
+                    case 1:
+                        System.out.println("Buku terpinjam: ");
+                        displayBorrowedBooks();
+                        break;
+                    case 2:
+                        choiceBook(daftarBuku);
+                        break;
+                    case 3:
+                        returnBook();
+                        break;
+                    case 4:
+                        logout();
+                        return;
+                    default:
+                        System.out.println("Pilihan tidak valid!");
+                }
             }
+        } catch (Exception e) {
+            System.err.println();
         }
     }
     public void displayBorrowedBooks() {
@@ -83,12 +87,12 @@ public class Student extends User implements iMenu {
         }
     }
     @Override
-    public void choiceBook(Book[] bookList) {
+    public void choiceBook(ArrayList<Book> bookArrayList) {
         System.out.println("Daftar Buku Tersedia:");
         System.out.println("================================================================");
         System.out.println("|| No. || Id Buku || Nama Buku || Author || Category || Stock ||");
         int index = 1;
-        for (Book book : bookList) {
+        for (Book book : bookArrayList) {
             if (book != null) {
                 System.out.println("|| " + index + " || " + book.getIdBuku() + " || " + book.getJudul() + " || " + book.getAuthor() + " || " + book.getCategory() + "  || " + book.getStok() + " ||");
                 index++;

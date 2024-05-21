@@ -2,14 +2,16 @@ package data;
 
 import books.*;
 import static com.main.Main.*;
+
+import exception.custom.illegalAdminAccess;
 import util.iMenu;
 
-
-
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Admin extends User implements iMenu {
     Scanner scanner = new Scanner(System.in);
+
     public Admin() {
         super("admin");
     }
@@ -19,50 +21,67 @@ public class Admin extends User implements iMenu {
         String username = scanner.next();
         System.out.print("Masukkan Password (admin): ");
         String password = scanner.next();
-        if (isAdmin(username, password)) {
-            System.out.println("Login berhasil sebagai Admin");
-            menu();
-        } else {
-            System.out.println("User Admin tidak ditemukan");
+        try {
+            if (isAdmin(username, password)) {
+                System.out.println("Login berhasil sebagai Admin");
+                menu();
+            } else {
+                System.out.println("User Admin tidak ditemukan");
+            }
+        } catch (illegalAdminAccess e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private boolean isAdmin(String username, String password) {
-        return username.equals("admin") && password.equals("admin");
+    private boolean isAdmin(String username, String password) throws illegalAdminAccess {
+        if (username.equals("admin") && password.equals("admin")) {
+            System.out.println("login berhasil");
+        } else {
+            throw new illegalAdminAccess("invalid credential");
+        }
+        return true;
     }
 
     public void menu() {
-        while (true) {
-            System.out.println("Dashboard Admin");
-            System.out.println("1. Tambah Mahasiswa");
-            System.out.println("2. Tampilkan Mahasiswa");
-            System.out.println("3. Input Buku");
-            System.out.println("4. Tampilkan Daftar Buku");
-            System.out.println("5. Logout");
-            System.out.print("Pilih antara (1-5): ");
-            int choice = scanner.nextInt();
+        try {
+            while (true) {
+                System.out.println("Dashboard Admin");
+                System.out.println("1. Tambah Mahasiswa");
+                System.out.println("2. Tampilkan Mahasiswa");
+                System.out.println("3. Input Buku");
+                System.out.println("4. Tampilkan Daftar Buku");
+                System.out.println("5. Logout");
+                System.out.print("Pilih antara (1-5): ");
+                int choice = scanner.nextInt();
 
-            switch (choice) {
-                case 1:
-                    addStudent();
-                    break;
-                case 2:
-                    displayStudents();
-                    break;
-                case 3:
-                    inputBook();
-                    break;
-                case 4:
-                    displayBooks(daftarBuku);
-                    break;
-                case 5:
-                    System.out.println("Logout berhasil.");
-                    return;
-                default:
-                    System.out.println("Pilihan tidak valid!");
+                switch (choice) {
+                    case 1:
+                        addStudent();
+                        break;
+                    case 2:
+                        displayStudents();
+                        break;
+                    case 3:
+                        inputBook();
+                        break;
+                    case 4:
+                        displayBooks(daftarBuku);
+                        break;
+                    case 5:
+                        System.out.println("Logout berhasil.");
+                        return;
+                    default:
+                        System.out.println("Pilihan tidak valid!");
+                }
             }
+        } catch (Exception e) {
+            System.err.println(e);
         }
     }
+
+
+
+
 
     @Override
     public void addStudent() {
@@ -119,15 +138,15 @@ public class Admin extends User implements iMenu {
         switch (bookType) {
             case 1:
                 idBuku = generateId("HB");
-                daftarBuku[i++] = new HistoryBook(idBuku, judul, stok, category, author);
+                daftarBuku.add(new HistoryBook(idBuku, judul, stok, category, author)) ;
                 break;
             case 2:
                 idBuku = generateId("SB");
-                daftarBuku[i++] = new StoryBook(idBuku, judul, stok, category, author);
+                daftarBuku.add(new HistoryBook(idBuku, judul, stok, category, author)) ;
                 break;
             case 3:
                 idBuku = generateId("TB");
-                daftarBuku[i++] = new TextBook(idBuku, judul, stok, category, author);
+                daftarBuku.add(new TextBook(idBuku, judul, stok, category, author)) ;
                 break;
             default:
                 System.out.println("Pilihan tidak valid!");
@@ -137,7 +156,7 @@ public class Admin extends User implements iMenu {
     }
 
     @Override
-    public void displayBooks(Book[] bookList) {
+    public void displayBooks(ArrayList<Book> bookArrayList) {
         System.out.println("Daftar Buku Tersedia:");
         System.out.println("==============================================================================");
         System.out.println("|\tNo.\t|\tId Buku\t|\tNama Buku\t|\tAuthor\t|\tCategory\t|\tStock\t|");
